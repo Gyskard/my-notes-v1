@@ -282,6 +282,86 @@
                             }
                         ],
                         "enabled": true
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "put",
+                        "endpoint": ":id",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [
+                                    {
+                                        "target": "body",
+                                        "modifier": "title",
+                                        "value": ".*",
+                                        "isRegex": true
+                                    }
+                                ],
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "delete",
+                        "endpoint": ":id",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [
+                                    {
+                                        "key": "",
+                                        "value": ""
+                                    }
+                                ],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true
+                    },
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "md/:id",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "{}",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [
+                                    {
+                                        "key": "",
+                                        "value": ""
+                                    }
+                                ],
+                                "filePath": "C:\\Users\\Gyskard\\Documents\\GitHub\\my-notes\\src\\front\\mock\\test.md",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true
                     }
                 ],
                 "proxyMode": false,
