@@ -4,14 +4,16 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "server": "nodemon app.js",
+    "server": "nodemon app.js --config ./config/nodemon.json",
     "lint": "npx eslint -c ./config/.eslintrc.json *.js --fix"
   },
   "author": "gyskard",
   "license": "MIT",
   "dependencies": {
+    "directory-tree": "^2.2.4",
     "express": "^4.17.1",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
