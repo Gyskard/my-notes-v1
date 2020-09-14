@@ -10,13 +10,13 @@ const managerFile = 'manager.json'
 
 const updateManagerFile = (data) => fs.writeFileSync(managerFile, JSON.stringify(data))
 
-const checkIfNotDesynchronisation = (manager) => {
-  const dataDir = dirTree("./data", { extensions: /\.md/ });
+const checkIfNotDesynchronisation = (dataPath, manager) => {
+  const dataDir = dirTree(dataPath, { extensions: /\.md/ });
   if (dataDir.children.length === manager.note.length) {
     let everyFilesExist = true;
     for (let i = 0; i < manager.note.length; i++) {
       const number = manager.note[i].number;
-      if(!fs.existsSync(`./data/${number}.md`)) everyFilesExist = false;
+      if(!fs.existsSync(`${dataPath}${number}.md`)) everyFilesExist = false;
     }
     return everyFilesExist;
   }

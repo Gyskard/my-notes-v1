@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "server": "nodemon app.js --config ./config/nodemon.json",
-    "lint": "npx eslint -c ./config/.eslintrc.json *.js --fix"
+    "lint": "npx eslint -c ./config/.eslintrc.json *.js --fix",
+    "test": "npx mocha ./test/mocha/app.js"
   },
   "author": "gyskard",
   "license": "MIT",
