@@ -30,7 +30,7 @@ if(!fs.existsSync('data/')) shell.mkdir('data/')
 
 const manager = JSON.parse(fs.readFileSync(managerFile))
 
-if (!checkIfNotDesynchronisation(manager)) throw('data desynchronisation')
+if (!checkIfNotDesynchronisation('data/', manager)) throw 'data desynchronisation'
 
 // ------------ SERVER ------------//
 
