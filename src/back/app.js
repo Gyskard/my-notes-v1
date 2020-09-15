@@ -10,17 +10,22 @@ const managerFile = 'manager.json'
 
 const updateManagerFile = (data) => fs.writeFileSync(managerFile, JSON.stringify(data))
 
-const checkIfNotDesynchronisation = (dataPath, manager) => {
-  const dataDir = dirTree(dataPath, { extensions: /\.md/ });
-  if (dataDir.children.length === manager.note.length) {
-    let everyFilesExist = true;
-    for (let i = 0; i < manager.note.length; i++) {
-      const number = manager.note[i].number;
-      if(!fs.existsSync(`${dataPath}${number}.md`)) everyFilesExist = false;
+const checkIfNotDesynchronisation = (dataPath, managerPath) => {
+  if (!fs.existsSync(dataPath)) return false;
+  else if (!fs.existsSync(managerPath)) return false;
+  else {
+    const dataDir = dirTree(dataPath, { extensions: /\.md/ });
+    const manager = JSON.parse(fs.readFileSync(managerPath));
+    if (dataDir.children.length !== manager.note.length) return false;
+    else {
+      let everyFilesExist = true;
+      for (let i = 0; i < manager.note.length; i++) {
+        const number = manager.note[i].number;
+        if(!fs.existsSync(`${dataPath}${number}.md`)) everyFilesExist = false;
+      }
+      return true;
     }
-    return everyFilesExist;
   }
-  return false;
 }
 
 // ------------ MANAGER ------------//
@@ -30,7 +35,7 @@ if(!fs.existsSync('data/')) shell.mkdir('data/')
 
 const manager = JSON.parse(fs.readFileSync(managerFile))
 
-if (!checkIfNotDesynchronisation('data/', manager)) throw 'data desynchronisation'
+if (!checkIfNotDesynchronisation('data/', manager)) console.log('data desynchronisation')
 
 // ------------ SERVER ------------//
 
@@ -80,3 +85,5 @@ app.put('/', function (req, res) {
     res.status(200).send(String(numberIncrement))
   }
 })
+
+module.exports.checkIfNotDesynchronisation = checkIfNotDesynchronisation;
