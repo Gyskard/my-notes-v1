@@ -4,38 +4,49 @@ const dirTree = require("directory-tree")
 const express = require('express')
 const app = express()
 
-const managerFile = 'manager.json'
+const managerFilePath = 'manager.json'
 
 // ------------ FUNCTIONS ------------//
 
-const updateManagerFile = (data) => fs.writeFileSync(managerFile, JSON.stringify(data))
+const updateManagerFile = (data) => fs.writeFileSync(managerFilePath, JSON.stringify(data))
 
 const checkIfNotDesynchronisation = (dataPath, managerPath) => {
-  if (!fs.existsSync(dataPath)) return false;
-  else if (!fs.existsSync(managerPath)) return false;
+  if (!fs.existsSync(dataPath)) {
+    console.log("data folder not found")
+    return false;
+  }
+  else if (!fs.existsSync(managerPath)) {
+    console.log("manager file not found");
+    return false;
+  }
   else {
     const dataDir = dirTree(dataPath, { extensions: /\.md/ });
     const manager = JSON.parse(fs.readFileSync(managerPath));
-    if (dataDir.children.length !== manager.note.length) return false;
+    if (dataDir.children.length !== manager.note.length) {
+      console.log("incorrect number of files between data folder and manager file");
+      return false;
+    }
     else {
       let everyFilesExist = true;
       for (let i = 0; i < manager.note.length; i++) {
         const number = manager.note[i].number;
-        if(!fs.existsSync(`${dataPath}${number}.md`)) everyFilesExist = false;
+        if(!fs.existsSync(`${dataPath}/${number}.md`)) everyFilesExist = false;
       }
-      return true;
+      if (!everyFilesExist) console.log("files specified in manager file doesn't exist")
+      return everyFilesExist;
     }
   }
 }
 
 // ------------ MANAGER ------------//
 
-if(!fs.existsSync(managerFile)) updateManagerFile({"number_increment": 1,"note": []})
+if(!fs.existsSync(managerFilePath)) updateManagerFile({"number_increment": 1,"note": []})
 if(!fs.existsSync('data/')) shell.mkdir('data/')
 
-const manager = JSON.parse(fs.readFileSync(managerFile))
 
-if (!checkIfNotDesynchronisation('data/', manager)) console.log('data desynchronisation')
+if (!checkIfNotDesynchronisation('data/', managerFilePath)) console.log('data desynchronisation')
+
+const manager = JSON.parse(fs.readFileSync(managerFilePath))
 
 // ------------ SERVER ------------//
 
