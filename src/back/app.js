@@ -5,6 +5,7 @@ const express = require('express')
 const app = express()
 
 const managerFilePath = 'manager.json'
+const dataFolderPath = 'data/'
 
 // ------------ FUNCTIONS ------------//
 
@@ -38,9 +39,9 @@ const checkIfNotDesynchronisation = (dataPath, managerPath) => {
 // ------------ MANAGER ------------//
 
 if (!fs.existsSync(managerFilePath)) updateManagerFile({ number_increment: 1, note: [] })
-if (!fs.existsSync('data/')) shell.mkdir('data/')
+if (!fs.existsSync(dataFolderPath)) shell.mkdir(dataFolderPath)
 
-if (!checkIfNotDesynchronisation('data/', managerFilePath)) console.log('data desynchronisation')
+if (!checkIfNotDesynchronisation(dataFolderPath, managerFilePath)) console.log('data desynchronisation')
 
 const manager = JSON.parse(fs.readFileSync(managerFilePath))
 
@@ -54,14 +55,13 @@ app.listen(port, () => console.log(`Server running at port ${port} !`))
 app.param('id', function (req, res, next, id) {
   const note = manager.note[req.params.id]
   if (isNaN(parseInt(id, 10))) res.status(400).send('parameter must be a number')
-  else if (note === undefined) res.status(404).send('note not found')
+  else if (!fs.existsSync(`${dataFolderPath}/${req.params.id}.md`)) res.status(404).send('note not found')
   else next()
 })
 
-app.get('/:id', function (req, res) {
-  const note = manager.note[req.params.id]
-  res.json(note)
-})
+app.get('/:id', (req, res) => res.download(`${dataFolderPath}/${req.params.id}.md`))
+
+/*
 
 app.patch('/:id', function (req, res) {
   const title = req.query.title
@@ -92,5 +92,7 @@ app.put('/', function (req, res) {
     res.status(200).send(String(numberIncrement))
   }
 })
+
+*/
 
 module.exports.checkIfNotDesynchronisation = checkIfNotDesynchronisation
