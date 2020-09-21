@@ -38,7 +38,7 @@ const checkIfNotDesynchronisation = (dataPath, managerPath) => {
 
 // ------------ MANAGER ------------//
 
-if (!fs.existsSync(managerFilePath)) updateManagerFile({ number_increment: 1, note: [] })
+if (!fs.existsSync(managerFilePath)) updateManagerFile({ number_increment: 0, note: [] })
 if (!fs.existsSync(dataFolderPath)) shell.mkdir(dataFolderPath)
 
 if (!checkIfNotDesynchronisation(dataFolderPath, managerFilePath)) console.log('data desynchronisation')
@@ -53,13 +53,27 @@ app.listen(port, () => console.log(`Server running at port ${port} !`))
 // ------------ ENDPOINT ------------//
 
 app.param('id', function (req, res, next, id) {
-  const note = manager.note[req.params.id]
   if (isNaN(parseInt(id, 10))) res.status(400).send('parameter must be a number')
   else if (!fs.existsSync(`${dataFolderPath}/${req.params.id}.md`)) res.status(404).send('note not found')
   else next()
 })
 
-app.get('/:id', (req, res) => res.download(`${dataFolderPath}/${req.params.id}.md`))
+app.get('/note/:id', (req, res) => res.download(`${dataFolderPath}/${req.params.id}.md`))
+
+app.put('/note', function (req, res) {
+  const title = req.query.title
+  console.log(req.files)
+  if (title === undefined) res.status(400).send('query parameter title is missing')
+  else if (title.replace(' ', '').length === 0) res.status(400).send('query parameter title is empty')
+  else {
+    const numberIncrement = manager.number_increment + 1
+    manager.number_increment = numberIncrement
+    manager.note.push({"number":numberIncrement,"title":title})
+    updateManagerFile(manager)
+    res.status(200).send(String(numberIncrement))
+  }
+})
+
 
 /*
 
@@ -80,18 +94,6 @@ app.delete('/:id', function (req, res) {
   res.status(200).send('ok')
 })
 
-app.put('/', function (req, res) {
-  const title = req.query.title
-  if (title === undefined) res.status(400).send('query parameter title is missing')
-  else if (title.replace(' ', '').length === 0) res.status(400).send('query parameter title is empty')
-  else {
-    const numberIncrement = manager.number_increment + 1
-    manager.number_increment = numberIncrement
-    manager.note[numberIncrement] = title
-    updateManagerFile(manager)
-    res.status(200).send(String(numberIncrement))
-  }
-})
 
 */
 
