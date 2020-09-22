@@ -3,7 +3,10 @@ const shell = require('shelljs')
 const dirTree = require('directory-tree')
 const express = require('express')
 const app = express()
+const fileUpload = require('express-fileupload')
+const bodyParser = require('body-parser')
 
+const port = process.env.PORT || 3000
 const managerFilePath = 'manager.json'
 const dataFolderPath = 'data/'
 
@@ -47,7 +50,13 @@ const manager = JSON.parse(fs.readFileSync(managerFilePath))
 
 // ------------ SERVER ------------//
 
-const port = 3000
+app.use(fileUpload({
+  createParentPath: true
+}));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.listen(port, () => console.log(`Server running at port ${port} !`))
 
 // ------------ ENDPOINT ------------//
@@ -60,9 +69,25 @@ app.param('id', function (req, res, next, id) {
 
 app.get('/note/:id', (req, res) => res.download(`${dataFolderPath}/${req.params.id}.md`))
 
-app.put('/note', function (req, res) {
+app.put('/note', async (req, res) => {  
+  if (!req.files) res.status(400).send('no file')
+  else {
+    const file = req.files[''];
+    if(file.length > 1) res.status(400).send('multiple files')
+    else {
+      const name = req.files[''].name
+      if(name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
+      else {
+        if (file.size === 0) res.status(400).send('empty file')
+        else if (!req.query.title) res.status(400).send('no title')
+        else {
+          // next...
+        }
+      }
+    }
+  }
+  /*
   const title = req.query.title
-  console.log(req.files)
   if (title === undefined) res.status(400).send('query parameter title is missing')
   else if (title.replace(' ', '').length === 0) res.status(400).send('query parameter title is empty')
   else {
@@ -70,8 +95,9 @@ app.put('/note', function (req, res) {
     manager.number_increment = numberIncrement
     manager.note.push({"number":numberIncrement,"title":title})
     updateManagerFile(manager)
-    res.status(200).send(String(numberIncrement))
+    res.status(200).send(String(numberIncrement))s
   }
+  */
 })
 
 

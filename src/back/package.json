@@ -11,8 +11,10 @@
   "author": "gyskard",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "directory-tree": "^2.2.4",
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
     "nodemon": "^2.0.4",
     "shelljs": "^0.8.4"
   },
