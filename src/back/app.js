@@ -78,10 +78,13 @@ app.put('/note', async (req, res) => {
       const name = req.files[''].name
       if(name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
       else {
+        const title = req.headers.title;
         if (file.size === 0) res.status(400).send('empty file')
-        else if (!req.query.title) res.status(400).send('no title')
+        else if (!title) res.status(400).send('no title')
         else {
-          // next...
+          file.mv(`${dataFolderPath}1.md`, (err) => {
+            if (err) return res.status(500).send(err);
+          });
         }
       }
     }
