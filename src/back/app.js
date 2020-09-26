@@ -46,8 +46,6 @@ if (!fs.existsSync(dataFolderPath)) shell.mkdir(dataFolderPath)
 
 if (!checkIfNotDesynchronisation(dataFolderPath, managerFilePath)) console.log('data desynchronisation')
 
-const manager = JSON.parse(fs.readFileSync(managerFilePath))
-
 // ------------ SERVER ------------//
 
 app.use(fileUpload({
@@ -82,25 +80,24 @@ app.put('/note', async (req, res) => {
         if (file.size === 0) res.status(400).send('empty file')
         else if (!title) res.status(400).send('no title')
         else {
-          file.mv(`${dataFolderPath}1.md`, (err) => {
-            if (err) return res.status(500).send(err);
-          });
+          const manager = JSON.parse(fs.readFileSync(managerFilePath))
+          const numberIncrement = manager.number_increment + 1
+          if(fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) res.status(500).send('file already exists');
+          else {
+            file.mv(`${dataFolderPath}${numberIncrement}.md`, (err) => {
+              if (err) res.status(500).send(`impossible to save file : ${err}`)
+              else {
+                manager.number_increment = numberIncrement
+                manager.note.push({"number":numberIncrement,"title":title})
+                updateManagerFile(manager)
+                res.status(200).send(String(numberIncrement))
+              }
+            });
+          }
         }
       }
     }
   }
-  /*
-  const title = req.query.title
-  if (title === undefined) res.status(400).send('query parameter title is missing')
-  else if (title.replace(' ', '').length === 0) res.status(400).send('query parameter title is empty')
-  else {
-    const numberIncrement = manager.number_increment + 1
-    manager.number_increment = numberIncrement
-    manager.note.push({"number":numberIncrement,"title":title})
-    updateManagerFile(manager)
-    res.status(200).send(String(numberIncrement))s
-  }
-  */
 })
 
 
