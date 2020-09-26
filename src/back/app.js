@@ -50,10 +50,10 @@ if (!checkIfNotDesynchronisation(dataFolderPath, managerFilePath)) console.log('
 
 app.use(fileUpload({
   createParentPath: true
-}));
+}))
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.listen(port, () => console.log(`Server running at port ${port} !`))
 
@@ -67,39 +67,38 @@ app.param('id', function (req, res, next, id) {
 
 app.get('/note/:id', (req, res) => res.download(`${dataFolderPath}/${req.params.id}.md`))
 
-app.put('/note', async (req, res) => {  
+app.put('/note', async (req, res) => {
   if (!req.files) res.status(400).send('no file')
   else {
-    const file = req.files[''];
-    if(file.length > 1) res.status(400).send('multiple files')
+    const file = req.files['']
+    if (file.length > 1) res.status(400).send('multiple files')
     else {
       const name = req.files[''].name
-      if(name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
+      if (name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
       else {
-        const title = req.headers.title;
+        const title = req.headers.title
         if (file.size === 0) res.status(400).send('empty file')
         else if (!title) res.status(400).send('no title')
         else {
           const manager = JSON.parse(fs.readFileSync(managerFilePath))
           const numberIncrement = manager.number_increment + 1
-          if(fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) res.status(500).send('file already exists');
+          if (fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) res.status(500).send('file already exists')
           else {
             file.mv(`${dataFolderPath}${numberIncrement}.md`, (err) => {
               if (err) res.status(500).send(`impossible to save file : ${err}`)
               else {
                 manager.number_increment = numberIncrement
-                manager.note.push({"number":numberIncrement,"title":title})
+                manager.note.push({ number: numberIncrement, title: title })
                 updateManagerFile(manager)
                 res.status(200).send(String(numberIncrement))
               }
-            });
+            })
           }
         }
       }
     }
   }
 })
-
 
 /*
 
@@ -119,7 +118,6 @@ app.delete('/:id', function (req, res) {
   updateManagerFile(manager)
   res.status(200).send('ok')
 })
-
 
 */
 
