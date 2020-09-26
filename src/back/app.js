@@ -65,9 +65,13 @@ app.param('id', function (req, res, next, id) {
   else next()
 })
 
-app.get('/note/:id', (req, res) => res.download(`${dataFolderPath}/${req.params.id}.md`))
+app.get('/note/:id', (req, res) => {
+  console.log(`get /note for ${req.params.id}.md`)
+  res.download(`${dataFolderPath}/${req.params.id}.md`)
+})
 
 app.put('/note', async (req, res) => {
+  console.log('put /note')
   if (!req.files) res.status(400).send('no file')
   else {
     const file = req.files['']
@@ -90,6 +94,7 @@ app.put('/note', async (req, res) => {
                 manager.number_increment = numberIncrement
                 manager.note.push({ number: numberIncrement, title: title })
                 updateManagerFile(manager)
+                console.log(`file ${numberIncrement}.md has been created`)
                 res.status(200).send(String(numberIncrement))
               }
             })
