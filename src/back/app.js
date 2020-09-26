@@ -39,6 +39,11 @@ const checkIfNotDesynchronisation = (dataPath, managerPath) => {
   }
 }
 
+const deleteNoteInManager = (manager, id) => {
+  for (let i = 0; i < manager.note.length; i++) if (parseInt(manager.note[i].number) == id) manager.note.splice(i, 1)
+  return manager
+}
+
 // ------------ MANAGER ------------//
 
 if (!fs.existsSync(managerFilePath)) updateManagerFile({ number_increment: 0, note: [] })
@@ -105,6 +110,25 @@ app.put('/note', async (req, res) => {
   }
 })
 
+app.delete('/note/:id', function (req, res) {
+  const file = `${dataFolderPath}${req.params.id}.md`;
+  console.log(`delete /note for ${file}`)
+  if (fs.existsSync(file)) {
+    fs.unlinkSync(file, (err) => {
+      if(err) {
+        res.status(500).send(`impossible to delete ${file} file : ${err}`)
+        return false
+      }
+    });
+    if (!fs.existsSync(file)) {
+      let manager = JSON.parse(fs.readFileSync(managerFilePath))
+      manager = deleteNoteInManager(manager, req.params.id) 
+      updateManagerFile(manager)
+      res.status(200).send('ok')
+    } else res.status(500).send(`${file} file has not been deleted`)
+  } else res.status(500).send(`${file} file not found`)
+})
+
 /*
 
 app.patch('/:id', function (req, res) {
@@ -118,11 +142,7 @@ app.patch('/:id', function (req, res) {
   }
 })
 
-app.delete('/:id', function (req, res) {
-  delete manager.note[req.params.id]
-  updateManagerFile(manager)
-  res.status(200).send('ok')
-})
+
 
 */
 
