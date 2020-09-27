@@ -39,6 +39,11 @@ const checkIfNotDesynchronisation = (dataPath, managerPath) => {
   }
 }
 
+const changeNoteTitleInManager = (manager, id, title) => {
+  for (let i = 0; i < manager.note.length; i++) if (parseInt(manager.note[i].number) == id) manager.note[i].title = title
+  return manager
+}
+
 const deleteNoteInManager = (manager, id) => {
   for (let i = 0; i < manager.note.length; i++) if (parseInt(manager.note[i].number) == id) manager.note.splice(i, 1)
   return manager
@@ -66,13 +71,14 @@ app.listen(port, () => console.log(`Server running at port ${port} !`))
 
 app.param('id', function (req, res, next, id) {
   if (isNaN(parseInt(id, 10))) res.status(400).send('parameter must be a number')
-  else if (!fs.existsSync(`${dataFolderPath}/${req.params.id}.md`)) res.status(404).send('note not found')
+  else if (!fs.existsSync(`${dataFolderPath}/${id}.md`)) res.status(404).send('note not found')
   else next()
 })
 
 app.get('/note/:id', (req, res) => {
-  console.log(`get /note for ${req.params.id}.md`)
-  res.download(`${dataFolderPath}/${req.params.id}.md`)
+  const id = req.params.id;
+  console.log(`get /note for ${id}.md`)
+  res.download(`${dataFolderPath}/${id}.md`)
 })
 
 app.put('/note', async (req, res) => {
@@ -93,16 +99,15 @@ app.put('/note', async (req, res) => {
           const numberIncrement = manager.number_increment + 1
           if (fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) res.status(500).send('file already exists')
           else {
-            file.mv(`${dataFolderPath}${numberIncrement}.md`, (err) => {
-              if (err) res.status(500).send(`impossible to save file : ${err}`)
-              else {
-                manager.number_increment = numberIncrement
-                manager.note.push({ number: numberIncrement, title: title })
-                updateManagerFile(manager)
-                console.log(`file ${numberIncrement}.md has been created`)
-                res.status(200).send(String(numberIncrement))
-              }
-            })
+            file.mv(`${dataFolderPath}${numberIncrement}.md`)
+            if (fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) {
+              manager.number_increment = numberIncrement
+              manager.note.push({ number: numberIncrement, title: title })
+              updateManagerFile(manager)
+              console.log(`file ${numberIncrement}.md has been created`)
+              res.status(200).send(String(numberIncrement))
+            }
+            else res.status(500).send(`file ${numberIncrement}.md has not been created`)
           }
         }
       }
@@ -111,40 +116,55 @@ app.put('/note', async (req, res) => {
 })
 
 app.delete('/note/:id', function (req, res) {
-  const file = `${dataFolderPath}${req.params.id}.md`;
+  const id = req.params.id;
+  const file = `${dataFolderPath}${id}.md`;
   console.log(`delete /note for ${file}`)
   if (fs.existsSync(file)) {
-    fs.unlinkSync(file, (err) => {
-      if(err) {
-        res.status(500).send(`impossible to delete ${file} file : ${err}`)
-        return false
-      }
-    });
+    fs.unlinkSync(file)
     if (!fs.existsSync(file)) {
       let manager = JSON.parse(fs.readFileSync(managerFilePath))
-      manager = deleteNoteInManager(manager, req.params.id) 
+      manager = deleteNoteInManager(manager, id) 
       updateManagerFile(manager)
+      console.log(`file ${id}.md has been deleted`)
       res.status(200).send('ok')
     } else res.status(500).send(`${file} file has not been deleted`)
   } else res.status(500).send(`${file} file not found`)
 })
 
-/*
-
-app.patch('/:id', function (req, res) {
-  const title = req.query.title
-  if (title === undefined) res.status(400).send('query parameter title is missing')
-  else if (title.replace(' ', '').length === 0) res.status(400).send('query parameter title is empty')
+app.patch('/note/:id', function (req, res) {
+  console.log('patch /note')
+  if (!req.files) res.status(400).send('no file')
   else {
-    manager.note[req.params.id] = title
-    updateManagerFile(manager)
-    res.status(200).send('ok')
+    const id = req.params.id;
+    const file = req.files['']
+    if (file.length > 1) res.status(400).send('multiple files')
+    else {
+      const name = req.files[''].name
+      if (name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
+      else {
+        const title = req.headers.title
+        if (file.size === 0) res.status(400).send('empty file')
+        else if (!title) res.status(400).send('no title')
+        else {
+          const filePath = `${dataFolderPath}${id}.md`
+          fs.unlinkSync(filePath)
+          if (!fs.existsSync(filePath)) {
+            file.mv(filePath)
+            if (fs.existsSync(filePath)) {
+              let manager = JSON.parse(fs.readFileSync(managerFilePath))
+              manager = changeNoteTitleInManager(manager, id, title) 
+              updateManagerFile(manager)
+              console.log(`file ${id}.md has been updated`)
+              res.status(200).send("ok")
+            }
+            else res.status(500).send(`file ${id}.md has not been updated`)
+          } else res.status(500).send(`file ${id}.md has not been deleted`)
+        }
+      }
+    }
   }
 })
 
-
-
-*/
-
 module.exports.checkIfNotDesynchronisation = checkIfNotDesynchronisation
+module.exports.changeNoteTitleInManager = changeNoteTitleInManager
 module.exports.deleteNoteInManager = deleteNoteInManager
