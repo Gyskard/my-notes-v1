@@ -81,6 +81,12 @@ app.get('/note/:id', (req, res) => {
   res.download(`${dataFolderPath}/${id}.md`)
 })
 
+app.get('/list', (req, res) => {
+  const manager = JSON.parse(fs.readFileSync(managerFilePath))
+  res.json(manager.note)
+  console.log(`get /note/list`)
+})
+
 app.put('/note', async (req, res) => {
   console.log('put /note')
   if (!req.files) res.status(400).send('no file')
