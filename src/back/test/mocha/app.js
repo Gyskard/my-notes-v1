@@ -21,4 +21,11 @@ describe('app test', function() {
     it('found desynchronisation with one note but with a wrong name', function () {
         assert.strictEqual(app.checkIfNotDesynchronisation('./test/content/bad_sync_3/data', './test/content/bad_sync_3/manager.json'), false);
     });
+
+    it('delete note 1 in manager', function () {
+        const managerBeforeDelete = {"number_increment":2,"note":[{"number":1,"title":"test"},{"number":2,"title":"test"}]};
+        const managerAfterDelete = {"number_increment":2,"note":[{"number":2,"title":"test"}]};
+        assert.deepEqual(app.deleteNoteInManager(managerBeforeDelete, 1), managerAfterDelete);
+    });
+
 });

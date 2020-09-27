@@ -147,3 +147,4 @@ app.patch('/:id', function (req, res) {
 */
 
 module.exports.checkIfNotDesynchronisation = checkIfNotDesynchronisation
+module.exports.deleteNoteInManager = deleteNoteInManager
