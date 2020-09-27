@@ -28,4 +28,10 @@ describe('app test', function() {
         assert.deepEqual(app.deleteNoteInManager(managerBeforeDelete, 1), managerAfterDelete);
     });
 
+    it('modify title of note 2 in manager', function () {
+        const managerBeforeTitleModification = {"number_increment":2,"note":[{"number":1,"title":"test"},{"number":2,"title":"test"}]};
+        const managerAfterTitleModification = {"number_increment":2,"note":[{"number":1,"title":"test"},{"number":2,"title":"test2"}]};
+        assert.deepEqual(app.changeNoteTitleInManager(managerBeforeTitleModification, 2, "test2"), managerAfterTitleModification);
+    });
+
 });
