@@ -2,6 +2,7 @@ const fs = require('fs')
 const shell = require('shelljs')
 const dirTree = require('directory-tree')
 const express = require('express')
+var cors = require('cors')
 const app = express()
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser')
@@ -65,6 +66,8 @@ app.use(fileUpload({
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(cors())
+
 app.listen(port, () => console.log(`Server running at port ${port} !`))
 
 // ------------ ENDPOINT ------------//
@@ -97,7 +100,7 @@ app.put('/note', async (req, res) => {
       const name = req.files[''].name
       if (name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
       else {
-        const title = req.headers.title
+        const title = req.query.title
         if (file.size === 0) res.status(400).send('empty file')
         else if (!title) res.status(400).send('no title')
         else {
@@ -105,14 +108,16 @@ app.put('/note', async (req, res) => {
           const numberIncrement = manager.number_increment + 1
           if (fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) res.status(500).send('file already exists')
           else {
-            file.mv(`${dataFolderPath}${numberIncrement}.md`)
-            if (fs.existsSync(`${dataFolderPath}${numberIncrement}.md`)) {
-              manager.number_increment = numberIncrement
-              manager.note.push({ number: numberIncrement, title: title })
-              updateManagerFile(manager)
-              console.log(`file ${numberIncrement}.md has been created`)
-              res.status(200).send(String(numberIncrement))
-            } else res.status(500).send(`file ${numberIncrement}.md has not been created`)
+            file.mv(`${dataFolderPath}${numberIncrement}.md`, function(err) {
+              if (!err) {
+                manager.number_increment = numberIncrement
+                manager.note.push({ number: numberIncrement, title: title })
+                updateManagerFile(manager)
+                console.log(`file ${numberIncrement}.md has been created`)
+                res.status(200).send(String(numberIncrement))
+              } else res.status(500).send(`file ${numberIncrement}.md has not been created`)
+            })
+
           }
         }
       }

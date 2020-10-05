@@ -7,16 +7,15 @@
   </head>
   <body>
       <h1>My notes</h1>
-      <ul>
-        <li>
-            <a href="note.html">This is a note</a>
-        </li>
-        <li>
-            <a href="note.html">This is a note</a>
-        </li>
-        <li>
-            <a href="note.html">This is a note</a>
-        </li>
-      </ul>
+      <div id="list">
+        <ul>
+          <li v-for="note in list">
+              <a v-bind:href="'note.html/'+ note.number">{{ note.title }}</a>
+          </li>
+        </ul>
+      </div>
+      <script src="js/vue/vue.js"></script>
+      <script src="js/axios/axios.min.js"></script>
+      <script src="js/custom.js"></script>
   </body>
 </html>
