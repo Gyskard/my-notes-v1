@@ -7,22 +7,46 @@ const Note = {
   `
 }
 
-const NoteList = {
+const List = {
   template: `
-    <h3>List</h3>
-    <router-view></router-view>
+    <div>
+      <h2>List</h2>
+
+      <div v-if="list">
+        <ul>
+          <li v-for="note in list">
+          <router-link :to="{path: '/note/' + note.number}">{{ note.title }}</router-link>
+          </li>
+        </ul>
+      </div>
+
+      <div v-if="err">
+        <p>{{ err }}</p>
+      </div>
+
+    </div>
   `,
   data () {
     return {
       list: null,
-      error: null
+      err: null
     }
   },
   beforeRouteEnter (to, from, next) {
     axios
       .get('http://localhost:3000/list')
-      .then(reponse => (this.list = reponse))
-    console.log(this.list)
+      .then(list => {
+        next(vm => vm.setData('', list))
+      })
+      .catch(err => {
+        next(vm => vm.setData(err, ''))
+      })
+  },
+  methods: {
+    setData (err, list) {
+      if (err) this.err = err
+      else this.list = list.data
+    }
   }
 }
 
@@ -32,7 +56,9 @@ const NoteEdit = { template: '<div>edit</div>' }
 const router = new VueRouter({
   routes : [
     {
-      path: '/list', component: NoteList,
+      path: '/list', component: List
+    },
+    {
       path: '/note/:id', component: Note,
       children: [
         { path: 'show', component: NoteShow },
