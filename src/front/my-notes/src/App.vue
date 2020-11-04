@@ -11,9 +11,9 @@
           </v-btn>
         </v-toolbar>
       </v-card>
-      <v-content>
+      <v-main class="pt-10">
         <router-view></router-view>
-      </v-content>
+      </v-main>
     </div>
   </v-app>
 </template>

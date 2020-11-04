@@ -1,15 +1,17 @@
 <template>
   <div>
     <div v-if="list">
-        <v-card class="mx-auto" max-width="400" tile>
-            <v-list-item>
-                <v-list-item-content>
-                <v-list-item-title v-for="note in list" :key="note.number">
-                    {{ note.title }}
-                </v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-        </v-card>
+      <v-card class="mx-auto" max-width="400" tile>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title v-for="note in list" :key="note.number">
+              <router-link :to="{ path: '/note/' + note.number }">
+                {{ note.title }}
+              </router-link>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
     </div>
 
     <div v-if="err">
