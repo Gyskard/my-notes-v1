@@ -11,14 +11,50 @@
       </v-col>
       <v-col cols="6" md="4">
         <v-btn depressed color="primary" class="ml-3"> Modify </v-btn>
-        <v-btn depressed color="error" class="ml-3"> Delete </v-btn>
+        <v-dialog v-model="dialog" persistent max-width="290">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              depressed
+              color="error"
+              class="ml-3"
+              dark
+              v-bind="attrs"
+              v-on="on"
+            >
+              Delete
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline">
+              Delete {{ this.title }}
+            </v-card-title>
+            <v-card-text>
+              Are you sure you want to delete this note?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="dialog = false">
+                Cancel
+              </v-btn>
+              <v-btn color="error" text @click="dialog = false">
+                Delete this note
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
+    <v-row justify="center"> </v-row>
   </v-container>
 </template>
 
 <script>
 export default {
-  props: ["title", "err"],
-};
+  data () {
+    return {
+        dialog: false,
+      }
+  },
+  props: ["title", "err"]
+}
 </script>

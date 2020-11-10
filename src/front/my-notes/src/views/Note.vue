@@ -78,6 +78,9 @@ export default {
           this.err = err;
         });
     },
+    deleteNote(id) {
+      console.log(id)
+    }
   },
 };
 </script>
