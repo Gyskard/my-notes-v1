@@ -2,8 +2,8 @@ const fs = require('fs')
 const shell = require('shelljs')
 const dirTree = require('directory-tree')
 const express = require('express')
-var cors = require('cors')
-const app = express()
+const cors = require('cors')
+const app = express();
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser')
 
