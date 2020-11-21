@@ -18,8 +18,8 @@
               color="error"
               class="ml-3"
               dark
-              v-bind="attrs"
               v-on="on"
+              v-bind="attrs"
             >
               Delete
             </v-btn>
@@ -36,7 +36,7 @@
               <v-btn color="green darken-1" text @click="dialog = false">
                 Cancel
               </v-btn>
-              <v-btn color="error" text @click="dialog = false">
+              <v-btn color="error" text @click="dialog = false; deleteNote()">
                 Delete this note
               </v-btn>
             </v-card-actions>
@@ -55,6 +55,10 @@ export default {
         dialog: false,
       }
   },
-  props: ["title", "err"]
+  props: {
+    title: String,
+    err: String,
+    deleteNote: Function
+  }
 }
 </script>
