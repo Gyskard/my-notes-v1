@@ -84,6 +84,17 @@ app.get('/note/:id', (req, res) => {
   res.download(`${dataFolderPath}/${id}.md`)
 })
 
+app.get('/note/title/:id', (req, res) => {
+  const id = req.params.id
+  const manager = JSON.parse(fs.readFileSync(managerFilePath))
+  let title = ''
+  for (let i = 0; i < manager.note.length; i++) {
+    if (parseInt(manager.note[i].number, 10) === parseInt(id, 10)) title = manager.note[i].title
+  }
+  res.send(title)
+  console.log(`get title for ${id}.md`)
+});
+
 app.get('/list', (req, res) => {
   const manager = JSON.parse(fs.readFileSync(managerFilePath))
   res.json(manager.note)
