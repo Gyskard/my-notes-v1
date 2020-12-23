@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="list">
+    <div v-if="list.length > 0">
       <v-card class="mx-auto" max-width="400" tile>
         <v-list-item>
           <v-list-item-content>
@@ -8,6 +8,17 @@
               <router-link :to="{ path: '/note/' + note.number }">
                 {{ note.title }}
               </router-link>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </div>
+    <div v-else>
+      <v-card class="mx-auto" max-width="400" tile>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>
+              There are no notes.
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>

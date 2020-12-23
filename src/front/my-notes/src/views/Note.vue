@@ -52,8 +52,6 @@ export default {
         .get(`http://localhost:3000/note/${this.id}`)
         .then((note) => {
           this.note = note.data;
-          console.log(note)
-          this.title = "test3";
           this.err = null
         })
         .catch((err) => {
@@ -61,9 +59,21 @@ export default {
           this.title = null;
           this.err = err
         });
+      axios
+        .get(`http://localhost:3000/note/title/${this.id}`)
+        .then((title) => {
+          this.title = title.data;
+          this.err = null
+        })
+        .catch((err) => {
+          this.title = null;
+          this.err = err
+        })
     },
     deleteNote() {
-      axios.delete(`http://localhost:3000/note/${this.id}`)
+      axios
+          .delete(`http://localhost:3000/note/${this.id}`)
+          .then(() => this.$router.push({ path: '/'}))
     }
   },
 };
