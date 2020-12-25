@@ -105,10 +105,11 @@ app.put('/note', async (req, res) => {
   console.log('put /note')
   if (!req.files) res.status(400).send('no file')
   else {
-    const file = req.files['']
+    console.log(req.files)
+    const file = req.files['file']
     if (file.length > 1) res.status(400).send('multiple files')
     else {
-      const name = req.files[''].name
+      const name = req.files['file'].name
       if (name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
       else {
         const title = req.query.title
