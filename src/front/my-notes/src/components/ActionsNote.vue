@@ -10,7 +10,7 @@
         </div>
       </v-col>
       <v-col cols="6" md="4">
-        <v-btn depressed color="primary" class="ml-3"> Modify </v-btn>
+        <v-btn depressed color="primary" class="ml-3" :to="{ path: `/modify/${this.id}` }"> Modify </v-btn>
         <v-dialog v-model="dialog" persistent max-width="290">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -58,6 +58,7 @@ export default {
   props: {
     title: String,
     err: String,
+    id: Number,
     deleteNote: Function
   }
 }

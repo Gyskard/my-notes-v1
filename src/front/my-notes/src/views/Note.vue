@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <ActionsNote :title="title" :err="err" :deleteNote="deleteNote" />
+      <ActionsNote :id="id" :title="title" :err="err" :deleteNote="deleteNote" />
     </div>
     <v-divider></v-divider>
     <div class="ms-7">
@@ -56,7 +56,6 @@ export default {
         })
         .catch((err) => {
           this.note = null;
-          this.title = null;
           this.err = err
         });
       axios

@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Note from '../views/Note.vue'
 import Add from '../views/Add.vue'
+import Modify from '../views/Modify.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     path: '/add',
     name: 'Add',
     component: Add
+  },
+  {
+    path: '/modify/:id',
+    name: 'Modify',
+    component: Modify
   }
 ]
 

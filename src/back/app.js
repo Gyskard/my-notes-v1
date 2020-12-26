@@ -158,27 +158,28 @@ app.patch('/note/:id', function (req, res) {
   if (!req.files) res.status(400).send('no file')
   else {
     const id = req.params.id
-    const file = req.files['']
+    const file = req.files['file']
     if (file.length > 1) res.status(400).send('multiple files')
     else {
-      const name = req.files[''].name
+      const name = req.files['file'].name
       if (name.substring(name.length - 3, name.length) !== '.md') res.status(400).send('not md file')
       else {
-        const title = req.headers.title
+        const title = req.query.title
         if (file.size === 0) res.status(400).send('empty file')
         else if (!title) res.status(400).send('no title')
         else {
           const filePath = `${dataFolderPath}${id}.md`
           fs.unlinkSync(filePath)
           if (!fs.existsSync(filePath)) {
-            file.mv(filePath)
-            if (fs.existsSync(filePath)) {
-              let manager = JSON.parse(fs.readFileSync(managerFilePath))
-              manager = changeNoteTitleInManager(manager, id, title)
-              updateManagerFile(manager)
-              console.log(`file ${id}.md has been updated`)
-              res.status(200).send('ok')
-            } else res.status(500).send(`file ${id}.md has not been updated`)
+            file.mv(filePath, function() {
+              if (fs.existsSync(filePath)) {
+                let manager = JSON.parse(fs.readFileSync(managerFilePath))
+                manager = changeNoteTitleInManager(manager, id, title)
+                updateManagerFile(manager)
+                console.log(`file ${id}.md has been updated`)
+                res.status(200).send('ok')
+              } else res.status(500).send(`file ${id}.md has not been updated`)
+            })
           } else res.status(500).send(`file ${id}.md has not been deleted`)
         }
       }

@@ -3,7 +3,6 @@
     <div v-if="this.note">
       <vue-markdown>{{ this.note }}</vue-markdown>
     </div>
-
     <div v-if="this.err">
       <p>{{ this.err }}</p>
     </div>
@@ -14,6 +13,7 @@
 import VueMarkdown from "vue-markdown";
 
 export default {
+  name: 'ShowNote',
   props: ['note', 'err'],
   components: {
     VueMarkdown
