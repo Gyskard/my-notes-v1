@@ -15,14 +15,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/note/:id',
-    name: 'Note',
-    component: Note
-  },
-  {
     path: '/add',
     name: 'Add',
     component: Add
+  },
+  {
+    path: '/note/:id',
+    name: 'Note',
+    component: Note
   },
   {
     path: '/modify/:id',

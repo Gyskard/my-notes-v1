@@ -28,12 +28,6 @@
   </v-app>
 </template>
 
-<style>
-  html {
-    overflow: hidden
-  }
-</style>
-
 <script>
   export default {
     data: () => ({
