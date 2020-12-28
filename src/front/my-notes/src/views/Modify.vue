@@ -24,6 +24,9 @@ export default {
     messageRules: [
       v => !!v || 'Title is required',
       v => (v && v.length <= 25) || 'Title must be less than 25 characters'
+    ],
+    fileRules: [
+      v => !!v || 'File is required'
     ]
   }),
   methods: {

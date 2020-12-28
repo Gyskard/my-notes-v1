@@ -18,7 +18,7 @@
               label="Note"
               show-size
               truncate-length="15"
-              @input="onChangeFile"
+              @change="onChangeFile"
           ></v-file-input>
         </v-col>
       </v-row>
@@ -69,18 +69,19 @@ export default {
     onChangeFile(file) { if (file !== undefined) this.file = file },
     onChangeTitle(title) { if (title !== undefined) this.title = title },
     uploadNote() {
+      let config = { headers: { 'Content-Type': 'multipart/form-data' } };
+      let formData = new FormData();
+      formData.append('file', this.file);
       if (this.mode === "modifyExistingNote") {
-        let formData = new FormData();
-        formData.append('file', this.file);
-        axios.patch( `http://localhost:3000/note/${this.id}?title=${this.title}`,
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            }
-        ).then(() => { this.$router.push({ path: '/'}) })
-        .catch((err) => { console.error(err) })
+        axios
+          .patch( `http://localhost:3000/note/${this.id}?title=${this.title}`, formData, config)
+          .then(() => { this.$router.push({ path: '/'}) })
+          .catch((err) => { console.error(err) })
+      } else if (this.mode === "addNewNote") {
+        axios
+          .put( `http://localhost:3000/note?title=${this.title}`, formData, config)
+          .then(() => { this.$router.push({ path: '/'}) })
+          .catch((err) => { console.error(err) })
       }
     }
   }
