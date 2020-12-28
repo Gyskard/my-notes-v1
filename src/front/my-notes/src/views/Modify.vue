@@ -7,12 +7,6 @@
 <script>
 import UploadNote from "@/components/UploadNote.vue";
 
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-
-Vue.use(VueAxios, axios);
-
 export default {
   name: 'Modify',
   components: {

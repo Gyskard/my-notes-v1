@@ -14,12 +14,6 @@
 import ShowNote from "@/components/ShowNote.vue";
 import ActionsNote from "@/components/ActionsNote.vue";
 
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-
-Vue.use(VueAxios, axios);
-
 export default {
   name: "Note",
   components: {
@@ -48,7 +42,7 @@ export default {
     },
     getNote() {
       this.updateId();
-      axios
+      this.$axios
         .get(`http://localhost:3000/note/${this.id}`)
         .then((note) => {
           this.note = note.data;
@@ -58,7 +52,7 @@ export default {
           this.note = null;
           this.err = err
         });
-      axios
+      this.$axios
         .get(`http://localhost:3000/note/title/${this.id}`)
         .then((title) => {
           this.title = title.data;
@@ -70,7 +64,7 @@ export default {
         })
     },
     deleteNote() {
-      axios
+      this.$axios
           .delete(`http://localhost:3000/note/${this.id}`)
           .then(() => this.$router.push({ path: '/'}))
     }

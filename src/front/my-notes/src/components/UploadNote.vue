@@ -35,8 +35,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: 'Modify',
   data: () => ({
@@ -61,7 +59,7 @@ export default {
   },
   methods: {
     getTitle() {
-      axios
+      this.$axios
           .get(`http://localhost:3000/note/title/${this.id}`)
           .then((title) => { this.title = title.data })
           .catch((err) => { console.error(err) });
@@ -73,12 +71,12 @@ export default {
       let formData = new FormData();
       formData.append('file', this.file);
       if (this.mode === "modifyExistingNote") {
-        axios
+        this.$axios
           .patch( `http://localhost:3000/note/${this.id}?title=${this.title}`, formData, config)
           .then(() => { this.$router.push({ path: '/'}) })
           .catch((err) => { console.error(err) })
       } else if (this.mode === "addNewNote") {
-        axios
+        this.$axios
           .put( `http://localhost:3000/note?title=${this.title}`, formData, config)
           .then(() => { this.$router.push({ path: '/'}) })
           .catch((err) => { console.error(err) })

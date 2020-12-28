@@ -38,12 +38,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-
-Vue.use(VueAxios, axios);
-
 export default {
   name: 'Add',
   data: () => ({
@@ -63,7 +57,7 @@ export default {
     uploadFile() {
       let formData = new FormData();
       formData.append('file', this.file);
-      axios.put( `http://localhost:3000/note?title=${this.title}`,
+      this.$axios.put( `http://localhost:3000/note?title=${this.title}`,
         formData,
         {
           headers: {
