@@ -24,36 +24,23 @@
         </v-list-item>
       </v-card>
     </div>
-
-    <div v-if="err">
-      <p>{{ err }}</p>
-    </div>
   </div>
 </template>
 
 <script>
-import Vue from "vue";
 import axios from "axios";
-import VueAxios from "vue-axios";
-
-Vue.use(VueAxios, axios);
 
 export default {
   data() {
     return {
-      list: null,
-      err: null,
-    };
+      list: null
+    }
   },
   beforeCreate() {
     axios
       .get("http://localhost:3000/list")
-      .then((list) => {
-        this.list = list.data;
-      })
-      .catch((err) => {
-        this.err = err;
-      });
-  },
-};
+      .then((list) => { this.list = list.data })
+      .catch((err) => { console.error(err) })
+  }
+}
 </script>
