@@ -73,7 +73,8 @@ export default {
           })
     },
     onChangeFile(file) {
-      if (file !== undefined) this.file = file },
+      if (file !== undefined) this.file = file
+    },
     onChangeTitle(title) {
       if (title !== undefined) this.title = title
     },
