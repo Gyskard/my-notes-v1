@@ -28,9 +28,13 @@ export default {
       this.id = this.$route.params.id;
     }
   },
-  created() { this.updateId() },
+  created() {
+    this.updateId()
+  },
   watch: {
-    $route() { this.updateId() }
+    $route() {
+      this.updateId()
+    }
   }
 }
 </script>

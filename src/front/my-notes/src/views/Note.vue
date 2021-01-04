@@ -1,11 +1,11 @@
 <template>
   <div>
     <div>
-      <ActionsNote :id="id" :title="title" :err="err" :deleteNote="deleteNote" />
+      <ActionsNote :id="id" :title="title" :deleteNote="deleteNote" />
     </div>
     <v-divider></v-divider>
     <div class="ms-7">
-      <ShowNote :note="note" :err="err"/>
+      <ShowNote :note="note" />
     </div>
   </div>
 </template>
@@ -45,22 +45,18 @@ export default {
       this.$axios
         .get(`http://localhost:3000/note/${this.id}`)
         .then((note) => {
-          this.note = note.data;
-          this.err = null
+          this.note = note.data
         })
         .catch((err) => {
-          this.note = null;
-          this.err = err
+          console.error(err)
         });
       this.$axios
         .get(`http://localhost:3000/note/title/${this.id}`)
         .then((title) => {
-          this.title = title.data;
-          this.err = null
+          this.title = title.data
         })
         .catch((err) => {
-          this.title = null;
-          this.err = err
+          console.error(err)
         })
     },
     deleteNote() {
@@ -68,6 +64,6 @@ export default {
           .delete(`http://localhost:3000/note/${this.id}`)
           .then(() => this.$router.push({ path: '/'}))
     }
-  },
-};
+  }
+}
 </script>

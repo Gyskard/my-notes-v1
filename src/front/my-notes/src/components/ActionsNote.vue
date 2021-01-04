@@ -5,9 +5,6 @@
         <div v-if="this.title">
           <div class="text-h5 text-decoration-underline">{{ this.title }}</div>
         </div>
-        <div v-if="this.err">
-          <div class="text-h5 text-decoration-underline">{{ this.err }}</div>
-        </div>
       </v-col>
       <v-col cols="6" md="4">
         <v-btn depressed color="primary" class="ml-3" :to="{ path: `/modify/${this.id}` }"> Modify </v-btn>
@@ -57,7 +54,6 @@ export default {
   },
   props: {
     title: String,
-    err: String,
     id: Number,
     deleteNote: Function
   }

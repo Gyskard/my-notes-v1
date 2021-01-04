@@ -30,9 +30,6 @@
       >
         Validate
       </v-btn>
-      <div v-if="this.err" class="pt-5">
-        <p>{{ this.err }}</p>
-      </div>
     </v-container>
   </v-form>
 </template>
@@ -64,11 +61,11 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         }
-      ).then((e) => {
-        this.$router.push({ path: `/note/${e.data}`})
+      ).then((idNewNote) => {
+        this.$router.push({ path: `/note/${idNewNote.data}`})
       })
       .catch((err) => {
-        this.err = err.response.data
+        console.error(err)
       })
     },
     onChangeFile(file) {

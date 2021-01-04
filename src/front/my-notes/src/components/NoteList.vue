@@ -37,8 +37,12 @@ export default {
   beforeCreate() {
     this.$axios
       .get("http://localhost:3000/list")
-      .then((list) => { this.list = list.data })
-      .catch((err) => { console.error(err) })
+      .then((list) => {
+        this.list = list.data
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 }
 </script>

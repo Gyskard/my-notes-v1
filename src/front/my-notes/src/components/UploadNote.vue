@@ -49,9 +49,13 @@ export default {
       v => !!v || 'File is required'
     ]
   }),
-  created() { this.mode === "modifyExistingNote" ? this.getTitle() : false },
+  created() {
+    if (this.mode === "modifyExistingNote") this.getTitle()
+  },
   watch: {
-    $route() { this.mode === "modifyExistingNote" ? this.getTitle() : false },
+    $route() {
+      if (this.mode === "modifyExistingNote") this.getTitle()
+    }
   },
   props: {
     id: String,
@@ -61,11 +65,18 @@ export default {
     getTitle() {
       this.$axios
           .get(`http://localhost:3000/note/title/${this.id}`)
-          .then((title) => { this.title = title.data })
-          .catch((err) => { console.error(err) });
+          .then((title) => {
+            this.title = title.data
+          })
+          .catch((err) => {
+            console.error(err)
+          })
     },
-    onChangeFile(file) { if (file !== undefined) this.file = file },
-    onChangeTitle(title) { if (title !== undefined) this.title = title },
+    onChangeFile(file) {
+      if (file !== undefined) this.file = file },
+    onChangeTitle(title) {
+      if (title !== undefined) this.title = title
+    },
     uploadNote() {
       let config = { headers: { 'Content-Type': 'multipart/form-data' } };
       let formData = new FormData();
@@ -73,13 +84,19 @@ export default {
       if (this.mode === "modifyExistingNote") {
         this.$axios
           .patch( `http://localhost:3000/note/${this.id}?title=${this.title}`, formData, config)
-          .then(() => { this.$router.push({ path: '/'}) })
+          .then(() => {
+            this.$router.push({ path: '/'})
+          })
           .catch((err) => { console.error(err) })
       } else if (this.mode === "addNewNote") {
         this.$axios
           .put( `http://localhost:3000/note?title=${this.title}`, formData, config)
-          .then(() => { this.$router.push({ path: '/'}) })
-          .catch((err) => { console.error(err) })
+          .then(() => {
+            this.$router.push({ path: '/'})
+          })
+          .catch((err) => {
+            console.error(err)
+          })
       }
     }
   }
