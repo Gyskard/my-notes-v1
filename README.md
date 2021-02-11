@@ -26,17 +26,17 @@ Local installation tested with Windows 10.
 ```
 // clone the repository
 
-git clone https://github.com/Gyskard/my-notes
+git clone https://github.com/Gyskard/my-notes-v1
 
 // for the server
 
-cd ./my-notes/src/back
+cd ./my-notes-v1/src/back
 npm install
 npm run server
 
 // for the client
 
-cd ./my-notes/src/front/my-notes
+cd ./my-notes-v1/src/front/my-notes
 npm install
 npm run serve
 ```
